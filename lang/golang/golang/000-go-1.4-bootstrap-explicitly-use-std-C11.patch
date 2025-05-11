@@ -1,0 +1,33 @@
+diff --git a/src/cmd/dist/build.c b/src/cmd/dist/build.c
+index 8d82167..7fbc409 100644
+--- a/src/cmd/dist/build.c
++++ b/src/cmd/dist/build.c
+@@ -485,6 +485,7 @@ static char *proto_gccargs[] = {
+ 	"-fno-common",
+ 	"-ggdb",
+ 	"-pipe",
++	"-std=gnu11"
+ };
+ 
+ // gccargs2 is the second part of gccargs.
+diff --git a/src/make.bash b/src/make.bash
+index 104c3ba..2ab4666 100755
+--- a/src/make.bash
++++ b/src/make.bash
+@@ -130,7 +130,7 @@ fi
+ if [ -z "$CC" -a -z "$(type -t gcc)" -a -n "$(type -t clang)" ]; then
+ 	export CC=clang CXX=clang++
+ fi
+-${CC:-gcc} $mflag -O2 -Wall -Werror -o cmd/dist/dist -Icmd/dist "$DEFGOROOT" cmd/dist/*.c
++${CC:-gcc} $mflag -std=gnu11 -O2 -Wall -Werror -o cmd/dist/dist -Icmd/dist "$DEFGOROOT" cmd/dist/*.c
+ 
+ # -e doesn't propagate out of eval, so check success by hand.
+ eval $(./cmd/dist/dist env -p || echo FAIL=true)
+@@ -157,6 +157,7 @@ if [ "$1" = "--no-clean" ]; then
+ 	shift
+ fi
+ ./cmd/dist/dist bootstrap $buildall $GO_DISTFLAGS -v # builds go_bootstrap
++
+ # Delay move of dist tool to now, because bootstrap may clear tool directory.
+ mv cmd/dist/dist "$GOTOOLDIR"/dist
+ "$GOTOOLDIR"/go_bootstrap clean -i std

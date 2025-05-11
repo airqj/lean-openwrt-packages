@@ -281,13 +281,15 @@ HOST_GO_VARS= \
 	GOCACHE="$(GO_BUILD_CACHE_DIR)" \
 	GOENV=off \
 	CC="$(HOSTCC_NOCACHE)" \
-	CXX="$(HOSTCXX_NOCACHE)"
+	CXX="$(HOSTCXX_NOCACHE)" \
 
 define Host/Configure
 	$(call GoCompiler/Bootstrap/CheckHost,$(BOOTSTRAP_GO_VALID_OS_ARCH))
 	$(call GoCompiler/Host/CheckHost,$(HOST_GO_VALID_OS_ARCH))
 
 	mkdir -p "$(GO_BUILD_CACHE_DIR)"
+
+	patch -d $(BOOTSTRAP_BUILD_DIR) -p1 < 000-go-1.4-bootstrap-explicitly-use-std-C11.patch
 endef
 
 define Host/Compile
@@ -374,7 +376,7 @@ PKG_GO_VARS= \
 	PATH="$(HOST_GO_ROOT)/openwrt:$$$$PATH"
 
 PKG_GO_GCFLAGS= \
-	$(if $(GO_PKG_ENABLE_SPECTRE),-spectre all)
+	$(if $(GO_PKG_ENABLE_SPECTRE),-spectre all) \
 
 PKG_GO_ASMFLAGS= \
 	$(if $(GO_PKG_ENABLE_SPECTRE),-spectre all)
