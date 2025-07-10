@@ -23,8 +23,6 @@ PKG_CPE_ID:=cpe:/a:tinyproxy_project:tinyproxy
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 
-TARGET_LDFLAGS += -static
-
 include $(INCLUDE_DIR)/package.mk
 
 define Package/tinyproxy
